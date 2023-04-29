@@ -37,3 +37,8 @@ export async function deleteLocalFiles(files: Array<string>) {
     fs.unlinkSync(file);
   }
 }
+
+// url validation using a simple regex
+export function validateImageUrl(url: string) {
+  return url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
+}
