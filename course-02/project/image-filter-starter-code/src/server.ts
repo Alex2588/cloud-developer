@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles, validateImageUrl } from './util/util';
 
@@ -28,15 +28,15 @@ import { filterImageFromURL, deleteLocalFiles, validateImageUrl } from './util/u
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-  app.get("/filteredimage", async (req, res) => {
-    const { image_url } = req.query;
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    const imageUrl: string = req.query.image_url;
 
-    if (!image_url || !validateImageUrl(image_url)) {
+    if (!imageUrl || !validateImageUrl(imageUrl)) {
       return res.status(400).send("Invalid image url.")
     }
     
     try {
-      const imagePath = await filterImageFromURL(image_url);
+      const imagePath = await filterImageFromURL(imageUrl);
       res.status(200).sendFile(imagePath, () => deleteLocalFiles([imagePath]));
     } catch (e) {
       res.status(422).send("Cannot process the image for the provided url.");
